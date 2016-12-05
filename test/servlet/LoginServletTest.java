@@ -66,4 +66,33 @@ public class LoginServletTest extends TestServlet {
 
 	}
 
+	@Test
+	public void ログインに成功するget() throws Exception {
+		// データベースにテストデータを挿入
+		TestDataBase db=new TestDataBase();
+		db.setTestData("./testdata/story01/LoginServlet_test.xls");
+
+		// POSTメソッドを指定
+		setGet();
+
+		// テキストボックスに入力値を設定
+		webRequest.setParameter("LoginName", "test1");
+		webRequest.setParameter("PassWord", "xyz");
+
+		// Servletを呼び出す。
+		callServlet();
+
+		// RequestにUserオブジェクトが保存されていること（nullではないこと）を確認
+		assertThat(request.getAttribute("User"),notNullValue());
+
+		// RequestからUserオブジェクトを読み込み
+		User user=(User)request.getAttribute("User");
+
+		// 読み込んだオブジェクトのプロパティの値が適切かどうかをチェック
+		assertThat(user.getLoginName(),is("test1"));
+		assertThat(user.getPassWord(),is("xyz"));
+		assertThat(user.getName(),is("Mr.x"));
+
+	}
+
 }
